@@ -73,7 +73,7 @@ class CategoryTest extends TestCase
         $category = factory(Category::class)->create([
             'description' => 'test_description',
             'is_active' => false
-        ])->first();
+        ]);
 
         $data = [
             'name' => 'test_name_updated',
@@ -94,5 +94,9 @@ class CategoryTest extends TestCase
         $category->refresh();
 
         $this->assertNotNull($category->deleted_at);
+        $this->assertNull(Category::find($category->id));
+
+        $category->restore();
+        $this->assertNotNull(Category::find($category->id));
     }
 }
