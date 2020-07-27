@@ -149,8 +149,8 @@ class GenreControllerTest extends TestCase
             route('genres.destroy', ['genre' => $genre->id]));
         $response->assertStatus(204);
 
-        $genre = Genre::find($genre->id);
-        $this->assertNull($genre);
+        $this->assertNull(Genre::find($genre->id));
+        $this->assertNotNull(Genre::withTrashed()->find($genre->id));
     }
 
 }
