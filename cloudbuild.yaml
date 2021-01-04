@@ -5,7 +5,11 @@ steps:
 
   - id: "???????"
     name: 'docker'
-    args: ['ps']
+    args: ['ps', '-a']
+
+  - id: "???????"
+    name: 'docker'
+    args: ['start', 'micro-videos-app']
 
   - id: "Chown in /var/www"
     name: 'docker'
