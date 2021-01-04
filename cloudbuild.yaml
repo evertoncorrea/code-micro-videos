@@ -3,17 +3,13 @@ steps:
     name: "gcr.io/$PROJECT_ID/docker-compose:1.24.0"
     args: ["-f", "docker-compose.yaml", "up", "-d"]
 
-  - id: "[debug] ver imagens"
-    name: 'docker'
-    args: ['images']
-
   - id: "[debug] ver containers"
     name: 'docker'
     args: ['ps', '-a']
 
-  - id: "???????"
+  - id: "[debug] ver logs"
     name: 'docker'
-    args: ['start', 'micro-videos-app']
+    args: ['logs', 'micro-videos-app']
 
   - id: "Chown in /var/www"
     name: 'docker'
