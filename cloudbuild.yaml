@@ -1,0 +1,33 @@
+steps:
+  - id: "(1) Criando containers - docker-compose"
+    name: "gcr.io/$PROJECT_ID/docker-compose:1.24.0"
+    args: ["-f", "docker-compose.yaml", "up", "-d"]
+
+  - id: "(2) Construindo aplicação no container app - composer"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["exec", "-t", "app", "composer", "install"]
+
+  - id: "(3) Copiando .env"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["exec", "-t", "app", "cp", ".env.example", ".env"]
+
+  - id: "(4) Executando key generate"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["exec", "-t", "app", "php", "/var/www/artisan", "key:generate"]
+
+  - id: "(5) Executando migrations"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["exec", "-t", "app", "php", "/var/www/artisan", "migrate"]
+
+  - id: "(6) Executando testes - phpunit"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "exec",
+        "-t",
+        "app",
+        "php",
+        "/var/www/vendor/bin/phpunit",
+        "-c",
+        "/var/www/phpunit.xml",
+      ]
