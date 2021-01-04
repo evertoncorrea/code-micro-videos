@@ -4,23 +4,28 @@ steps:
     args: ["-f", "docker-compose.yaml", "up", "-d"]
 
   - id: "(2) Construindo aplicação no container app - composer"
-    name: "gcr.io/cloud-builders/docker"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
     args: ["exec", "-t", "micro-videos-app", "composer", "install"]
 
   - id: "(3) Copiando .env"
-    name: "gcr.io/cloud-builders/docker"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
     args: ["exec", "-t", "micro-videos-app", "cp", ".env.example", ".env"]
 
   - id: "(4) Executando key generate"
-    name: "gcr.io/cloud-builders/docker"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
     args: ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "key:generate"]
 
   - id: "(5) Executando migrations"
-    name: "gcr.io/cloud-builders/docker"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
     args: ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "migrate"]
 
   - id: "(6) Executando testes - phpunit"
-    name: "gcr.io/cloud-builders/docker"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
     args:
       [
         "exec",
