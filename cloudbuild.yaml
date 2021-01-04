@@ -5,19 +5,19 @@ steps:
 
   - id: "(2) Construindo aplicação no container app - composer"
     name: "gcr.io/cloud-builders/docker"
-    args: ["exec", "-t", "app", "composer", "install"]
+    args: ["exec", "-t", "micro-videos-app", "composer", "install"]
 
   - id: "(3) Copiando .env"
     name: "gcr.io/cloud-builders/docker"
-    args: ["exec", "-t", "app", "cp", ".env.example", ".env"]
+    args: ["exec", "-t", "micro-videos-app", "cp", ".env.example", ".env"]
 
   - id: "(4) Executando key generate"
     name: "gcr.io/cloud-builders/docker"
-    args: ["exec", "-t", "app", "php", "/var/www/artisan", "key:generate"]
+    args: ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "key:generate"]
 
   - id: "(5) Executando migrations"
     name: "gcr.io/cloud-builders/docker"
-    args: ["exec", "-t", "app", "php", "/var/www/artisan", "migrate"]
+    args: ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "migrate"]
 
   - id: "(6) Executando testes - phpunit"
     name: "gcr.io/cloud-builders/docker"
@@ -25,7 +25,7 @@ steps:
       [
         "exec",
         "-t",
-        "app",
+        "micro-videos-app",
         "php",
         "/var/www/vendor/bin/phpunit",
         "-c",
