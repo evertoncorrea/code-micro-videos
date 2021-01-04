@@ -1,0 +1,45 @@
+steps:
+  - id: "(1) Criando containers - docker-compose"
+    name: "gcr.io/$PROJECT_ID/docker-compose:1.24.0"
+    args: ["-f", "docker-compose.yaml", "up", "-d"]
+
+  - id: "[debug] ver containers"
+    name: 'docker'
+    args: ['ps', '-a']
+
+  - id: "[debug] ver logs"
+    name: 'docker'
+    args: ['logs', 'micro-videos-app']
+
+  - id: "Chown in /var/www"
+    name: 'docker'
+    args: ['exec','-u','root','-t','micro-videos-app','chown','-R','www-data:www-data','/var/www']
+
+  - id: "(2) Construindo aplicação no container app - composer"
+    name: "docker"
+    args: ["exec", "-t", "micro-videos-app", "composer", "install"]
+
+  - id: "(3) Copiando .env"
+    name: "docker"
+    args: ["exec", "-t", "micro-videos-app", "cp", ".env.example", ".env"]
+
+  - id: "(4) Executando key generate"
+    name: "docker"
+    args: ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "key:generate"]
+
+  - id: "(5) Executando migrations"
+    name: "docker"
+    args: ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "migrate"]
+
+  - id: "(6) Executando testes - phpunit"
+    name: "docker"
+    args:
+      [
+        "exec",
+        "-t",
+        "micro-videos-app",
+        "php",
+        "/var/www/vendor/bin/phpunit",
+        "-c",
+        "/var/www/phpunit.xml",
+      ]
